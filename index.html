@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation Anniversaire - Assil</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #221214;
+            font-family: 'Cormorant Garamond', serif;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            height: 90vh;
+            max-height: 660px;
+            perspective: 1500px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        /* Corps de l'enveloppe */
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #e2b9b3;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+            z-index: 3;
+            transition: all 0.5s ease;
+        }
+
+        /* Rabats */
+        .flap-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 55%;
+            background: #d4a39c;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top;
+            transition: transform 1.8s ease;
+            z-index: 6;
+        }
+
+        .flap-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 55%;
+            height: 100%;
+            background: #ca968e;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            z-index: 5;
+            transition: transform 1.8s ease;
+        }
+
+        .flap-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 100%;
+            background: #ca968e;
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            z-index: 5;
+            transition: transform 1.8s ease;
+        }
+
+        /* Sceau Coeur */
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: #b86b61;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        .heart-seal-icon {
+            width: 30px;
+            height: 30px;
+            fill: #f3d1cc;
+        }
+
+        /* ============ LA CARTE D'ANNIVERSAIRE ============ */
+        .invitation-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4eae4;
+            border-radius: 12px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 25px 15px;
+        }
+
+        /* Personnalisation de la Scrollbar */
+        .invitation-card::-webkit-scrollbar {
+            width: 5px;
+        }
+        .invitation-card::-webkit-scrollbar-track {
+            background: #f4eae4;
+            border-radius: 12px;
+        }
+        .invitation-card::-webkit-scrollbar-thumb {
+            background: #ca968e;
+            border-radius: 10px;
+        }
+
+        /* Contenu textuel */
+        .card-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            color: #332224;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-invite {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+
+        .anniv-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.1rem;
+            color: #aa5c52;
+            margin-bottom: 0px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        .name-badge {
+            display: inline-block;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.6rem;
+            background: rgba(226, 185, 179, 0.5);
+            padding: 0px 25px;
+            border-radius: 5px;
+            margin-bottom: 12px;
+            color: #221214;
+            border: 1px solid rgba(170, 92, 82, 0.2);
+        }
+
+        .birth-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #7a4b45;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .birth-info span {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            text-transform: none;
+            font-weight: 600;
+            display: block;
+            margin-top: 2px;
+            color: #aa5c52;
+        }
+
+        .desc-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            padding: 0 10px;
+            font-weight: 500;
+        }
+
+        /* ============ COMPTEUR DESIGN ============ */
+        .countdown-container {
+            width: 100%;
+            margin-top: 5px;
+            padding: 10px 0;
+            border-top: 1px dashed rgba(170, 92, 82, 0.3);
+        }
+
+        .countdown-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #88534c;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 52px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 6px 4px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(170, 92, 82, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .countdown-time {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #221214;
+        }
+
+        .countdown-unit {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: #aa5c52;
+            font-weight: 600;
+            margin-top: -2px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: #aa5c52;
+            margin: 15px auto 10px;
+            position: relative;
+        }
+        .divider::after {
+            content: '♦';
+            position: absolute;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f4eae4;
+            padding: 0 5px;
+            font-size: 10px;
+            color: #aa5c52;
+        }
+
+        /* ============ SECTION LIEU DE CÉLÉBRATION ============ */
+        .location-section {
+            width: 100%;
+            margin: 10px 0 15px;
+            text-align: center;
+        }
+
+        .location-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.1rem;
+            color: #aa5c52;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        .location-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #5a3a36;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+        .location-subtitle .home-icon {
+            display: inline-block;
+            font-size: 1.2rem;
+        }
+
+        /* Bouton pour afficher la carte */
+        .map-toggle-btn {
+            background: linear-gradient(135deg, #d4a39c 0%, #b86b61 100%);
+            border: none;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 10px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 14px rgba(184, 107, 97, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        .map-toggle-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
+            transition: left 0.6s ease;
+        }
+        .map-toggle-btn:hover::after {
+            left: 100%;
+        }
+        .map-toggle-btn:hover {
+            background: linear-gradient(135deg, #e2b9b3 0%, #ca968e 100%);
+            box-shadow: 0 6px 20px rgba(184, 107, 97, 0.5);
+            transform: translateY(-2px);
+        }
+        .map-toggle-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(184, 107, 97, 0.3);
+        }
+        .map-toggle-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #fff;
+            transition: transform 0.3s ease;
+        }
+        .map-toggle-btn.active svg {
+            transform: rotate(180deg);
+        }
+
+        /* Conteneur de la carte (iframe) */
+     /* Conteneur de la carte (iframe) */
+.map-container {
+    width: 100%;
+    max-height: 260px;
+    opacity: 1;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+/* Cadre rose décoratif autour de l'iframe */
+.map-frame {
+    position: relative;
+    border: 4px solid #ca968e;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 3px rgba(226, 185, 179, 0.45),
+        0 8px 28px rgba(170, 92, 82, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    background: #fdf6f3;
+    --corner-size: 18px;
+}
+
+/* Liseré décoratif en pointillés */
+.map-frame::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    border: 1.5px dashed rgba(170, 92, 82, 0.3);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Petit ornement étoile en haut */
+.map-frame::after {
+    content: '✦';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #ca968e;
+    background: #fdf6f3;
+    padding: 0 8px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Iframe Google Maps */
+.map-frame iframe {
+    display: block;
+    width: 100%;
+    height: 200px;
+    border: none;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Ajustement mobile */
+@media (max-width: 360px) {
+    .map-frame iframe {
+        height: 160px;
+    }
+    .map-container {
+        max-height: 220px;
+    }
+}
+        /* ============ ZONE DE L'IMAGE ADAPTÉE ============ */
+        .gallery {
+            padding: 10px 0;
+            background: #f4eae4;
+            width: 100%;
+        }
+
+        .photo-grid {
+            display: block;
+            width: 100%;
+        }
+
+        .photo-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            height: auto;
+            max-height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ============ ANIMATIONS À L'OUVERTURE ============ */
+        .envelope-container.opened .flap-top {
+            transform: rotateX(180deg);
+            z-index: 2;
+        }
+
+        .envelope-container.opened .flap-left {
+            transform: translate(-120px, -50px) scale(0);
+            opacity: 0;
+        }
+
+        .envelope-container.opened .flap-right {
+            transform: translate(120px, -50px) scale(0);
+            opacity: 0;
+        }
+
+        .envelope-container.opened .envelope {
+            transform: translateY(150px) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-container.opened .wax-seal {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+        }
+
+        .envelope-container.opened .invitation-card {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 20;
+        }
+
+        /* ============ BALLONS ET COEURS ============ */
+        .animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .flying-icon {
+            position: absolute;
+            bottom: -80px;
+            opacity: 0;
+            animation: flyUpAndRotate 4s ease-in forwards;
+        }
+
+        .flying-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .balloon-icon {
+            background: linear-gradient(135deg, #f7dcd7 0%, #e2b9b3 40%, #ca968e 80%, #9e6359 100%);
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset -4px -6px 12px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        .balloon-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 6px solid #ca968e;
+        }
+
+        @keyframes flyUpAndRotate {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.75;
+            }
+            85% {
+                opacity: 0.75;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(var(--custom-x)) rotate(var(--custom-angle));
+                opacity: 0;
+            }
+        }
+
+        .tap-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: #f2d5d0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+            z-index: 30;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .envelope-container.opened .tap-hint {
+            display: none;
+        }
+
+        /* ============ BOUTON CONTROLE MUSIQUE ============ */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: rgba(184, 107, 97, 0.85);
+            border: 1px solid rgba(243, 209, 204, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 150;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            background: #b86b61;
+            transform: scale(1.05);
+        }
+
+        .music-control svg {
+            width: 22px;
+            height: 22px;
+            fill: #f3d1cc;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation quand la musique joue */
+        .music-control.playing {
+            animation: musicPulse 1.8s infinite ease-in-out;
+        }
+
+        @keyframes musicPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(184, 107, 97, 0.4);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 4px 22px rgba(184, 107, 97, 0.7);
+            }
+        }
+
+        /* Ligne de coupure pour l'état muet */
+        .music-control .mute-line {
+            display: block;
+            position: absolute;
+            width: 28px;
+            height: 2px;
+            background: #f3d1cc;
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+
+        .music-control.playing .mute-line {
+            opacity: 0;
+            transform: rotate(0deg) scale(0);
+        }
+
+        /* Responsive Mobile Étroit */
+        @media (max-width: 360px) {
+            .anniv-title {
+                font-size: 2.6rem;
+            }
+            .name-badge {
+                font-size: 2.2rem;
+                padding: 0 15px;
+            }
+            .countdown-item {
+                min-width: 45px;
+            }
+            .countdown-time {
+                font-size: 1rem;
+            }
+            .music-control {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+            }
+            .location-title {
+                font-size: 1.8rem;
+            }
+            .location-subtitle {
+                font-size: 0.95rem;
+            }
+            .map-frame iframe {
+                height: 160px;
+            }
+            .map-container.visible {
+                max-height: 220px;
+            }
+            .map-toggle-btn {
+                margin: 10px auto 8px;
+                font-size: 0.7rem;
+                padding: 8px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Élément Audio Secret -->
+    <audio id="bgMusic" src="musique.mp3" loop></audio>
+
+    <!-- Bouton de Musique Flottant -->
+    <div class="music-control" id="musicBtn" onclick="toggleMusic(event)">
+        <!-- Ligne d'état muet (barré) -->
+        <div class="mute-line" id="muteLine"></div>
+        <!-- Icône Note de musique -->
+        <svg viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+        </svg>
+    </div>
+
+    <div class="envelope-container" id="envelope" onclick="openEnvelope()">
+        <div class="flap-top"></div>
+        <div class="flap-left"></div>
+        <div class="flap-right"></div>
+        <div class="envelope"></div>
+
+        <div class="wax-seal">
+            <svg class="heart-seal-icon" viewBox="0 0 24 24">
+                <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+        </div>
+
+        <div class="invitation-card">
+            <div class="card-content">
+                <div class="main-invite">Vous êtes invité(e) à</div>
+                <div class="anniv-title">Mon Anniversaire</div>
+
+                <div class="name-badge">Rania</div>
+
+                <div class="birth-info">
+                    <span>25 Juillet 2025</span>
+                </div>
+
+                <div class="desc-text">
+                    Votre présence serait le plus beau des cadeaux. J'ai le plaisir de vous inviter à partager avec moi
+                    cette journée si spéciale à l'occasion de mon anniversaire.
+                </div>
+
+                <div class="countdown-container">
+                    <div class="countdown-label">La célébration commence</div>
+                    <div class="birth-info">
+                        16H:00
+                    </div>
+                    <div class="countdown" id="countdown">
+                        <div class="countdown-item">
+                            <span class="countdown-time" id="days">00</span>
+                            <span class="countdown-unit">jours</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-time" id="hours">00</span>
+                            <span class="countdown-unit">heures</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-time" id="minutes">00</span>
+                            <span class="countdown-unit">min</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-time" id="seconds">00</span>
+                            <span class="countdown-unit">sec</span>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="gallery">
+                    <div class="photo-grid">
+                        <div class="photo-card">
+                            <img src="couple.png" alt="Photo de Rania">
+                        </div>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- ========== NOUVELLE SECTION : LIEU DE CÉLÉBRATION ========== -->
+                <div class="location-section">
+                    <div class="location-title">Lieu de célébration</div>
+                    <div class="location-subtitle">
+                        <span class="home-icon"></span> À domicile – Notre maison
+                    </div>
+
+                    <!-- Bouton pour ouvrir/fermer la carte -->
+                   
+
+                    <!-- Conteneur de l'iframe Google Maps -->
+                    <div class="map-container" id="mapContainer">
+                        <div class="map-frame">
+                            <!-- ⚠️ Remplace l'URL ci-dessous par ton adresse Google Maps exacte -->
+                           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.4424718622904!2d-0.6063801240261054!3d35.712763625912096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd7e890047c0aa53%3A0x162faf3390c3a218!2sTaha%20Maison!5e0!3m2!1sfr!2sdz!4v1784078399204!5m2!1sfr!2sdz" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        </div>
+                    </div>
+
+                     <a  href="https://maps.app.goo.gl/aEpeLsXDNN2Z7WdR9" target="_blank" class="map-toggle-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+            </svg>
+            Ouvrir dans Maps
+        </a>
+                </div>
+                <!-- ========== FIN SECTION LIEU ========== -->
+
+                
+            </div>
+        </div>
+
+        <div class="tap-hint">Toucher pour ouvrir</div>
+    </div>
+
+    <div class="animation-container" id="animationZone"></div>
+
+    <script>
+        let isOpen = false;
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        initCountdown("2026-07-25T16:00:00");
+
+        function openEnvelope() {
+            if (isOpen) return;
+            isOpen = true;
+
+            document.getElementById('envelope').classList.add('opened');
+            triggerPremiumFestivities();
+
+            // Lance la musique au premier clic sur l'enveloppe
+            playMusic();
+        }
+
+        // Gestion de la musique (Play)
+        function playMusic() {
+            music.play().then(() => {
+                musicBtn.classList.add('playing');
+            }).catch(err => {
+                console.log("Autoplay bloqué par le navigateur, attente d'une action utilisateur.");
+            });
+        }
+
+        // Toggle Manuel (Play/Pause) depuis le bouton de musique
+        function toggleMusic(event) {
+            // Empêche le clic de déclencher d'autres événements derrière
+            event.stopPropagation();
+
+            if (music.paused) {
+                music.play();
+                musicBtn.classList.add('playing');
+            } else {
+                music.pause();
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        // Toggle de la carte Google Maps
+     
+        function initCountdown(targetDateString) {
+            const targetDate = new Date(targetDateString).getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const difference = targetDate - now;
+
+                if (difference <= 0) {
+                    document.getElementById('countdown').innerHTML =
+                        "<span style='font-family: Cormorant Garamond; font-style: italic; color: #aa5c52; font-size: 1.2rem; font-weight:600;'>C'est le grand jour ! ✨</span>";
+                    clearInterval(intervalId);
+                    return;
+                }
+
+                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+                document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+                document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+                document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+            }
+
+            updateTimer();
+            const intervalId = setInterval(updateTimer, 1000);
+        }
+
+        function triggerPremiumFestivities() {
+            const zone = document.getElementById('animationZone');
+            const totalItems = 80;
+
+            const heartSVG = `
+                <svg viewBox="0 0 24 24" fill="#cc7a70">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            `;
+
+            for (let i = 0; i < totalItems; i++) {
+                setTimeout(() => {
+                    const container = document.createElement('div');
+                    container.className = 'flying-icon';
+
+                    const isBalloon = Math.random() > 0.5;
+
+                    if (isBalloon) {
+                        container.classList.add('balloon-icon');
+                        const width = Math.random() * 25 + 25;
+                        container.style.width = width + 'px';
+                        container.style.height = (width * 1.25) + 'px';
+                    } else {
+                        container.innerHTML = heartSVG;
+                        const size = Math.random() * 20 + 15;
+                        container.style.width = size + 'px';
+                        container.style.height = size + 'px';
+                    }
+
+                    container.style.left = (Math.random() * 85 + 5) + '%';
+                    container.style.setProperty('--custom-x', (Math.random() * 260 - 130) + 'px');
+                    container.style.setProperty('--custom-angle', (Math.random() * 180 - 90) + 'deg');
+                    container.style.animationDuration = (Math.random() * 1.8 + 2.2) + 's';
+
+                    zone.appendChild(container);
+
+                    setTimeout(() => container.remove(), 4000);
+                }, i * 40);
+            }
+        }
+    </script>
+</body>
+</html>
